@@ -2,76 +2,177 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>Birthday.exe</title>
+<title>birthday_protocol.exe</title>
 
 <style>
+
 body{
-    background:#0f172a;
-    color:#22c55e;
-    font-family: monospace;
-    text-align:center;
-    padding-top:100px;
+background:#020617;
+color:#22c55e;
+font-family:monospace;
+margin:0;
+padding:40px;
+overflow:hidden;
 }
 
-h1{
-    font-size:40px;
+#terminal{
+max-width:800px;
+margin:auto;
+font-size:20px;
+line-height:1.6;
 }
 
-button{
-    padding:15px 30px;
-    font-size:18px;
-    background:#22c55e;
-    border:none;
-    color:black;
-    cursor:pointer;
-    border-radius:8px;
+.cursor{
+display:inline-block;
+width:10px;
+background:#22c55e;
+animation:blink 1s infinite;
 }
 
-#message{
-    margin-top:40px;
-    font-size:22px;
-    display:none;
+@keyframes blink{
+0%{opacity:1}
+50%{opacity:0}
+100%{opacity:1}
 }
+
+#hugButton{
+display:none;
+margin-top:30px;
+padding:15px 30px;
+font-size:18px;
+background:#22c55e;
+border:none;
+border-radius:8px;
+cursor:pointer;
+}
+
+.heart{
+position:fixed;
+top:-20px;
+font-size:20px;
+animation:fall linear forwards;
+}
+
+@keyframes fall{
+to{
+transform:translateY(110vh);
+opacity:0;
+}
+}
+
 </style>
 </head>
 
 <body>
 
-<h1>Запустить программу поздравления?</h1>
+<div id="terminal"></div>
 
-<button onclick="runProgram()">RUN</button>
+<button id="hugButton" onclick="startLove()">Получить объятие</button>
 
-<div id="message">
-<h2>Компиляция поздравления...</h2>
-<p>✔ Загрузка теплых слов...</p>
-<p>✔ Добавление улыбок...</p>
-<p>✔ Генерация хорошего настроения...</p>
-
-<h1>🎉 С Днём Рождения! 🎉</h1>
-
-<p>
-Сегодня система сообщает:  
-Ты — один из самых ценных людей в моей жизни.
-</p>
-
-<p>
-Желаю тебе:  
-+100 к счастью  
-+50 к удаче  
-+999 к улыбкам  
-и бесконечный запас хорошего настроения.
-</p>
-
-<p>
-Спасибо, что ты есть ❤️
-</p>
-
-</div>
+<audio id="music" loop>
+<source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_6c6c1a1d9c.mp3?filename=sweet-love-110537.mp3" type="audio/mpeg">
+</audio>
 
 <script>
-function runProgram(){
-    document.getElementById("message").style.display="block";
+
+const text = [
+
+"> booting birthday_system...",
+"> loading happiness.dll",
+"> loading friendship_module...",
+">",
+"> scanning world for the best girl...",
+"> result: FOUND ❤️",
+">",
+"> compiling birthday message...",
+">",
+"🎉 С ДНЁМ РОЖДЕНИЯ! 🎉",
+"",
+"Сегодня система сообщает:",
+"ты — один из самых ценных людей",
+"в моей жизни.",
+"",
+"Пусть твоя жизнь будет как идеальный код:",
+"без багов, без ошибок,",
+"и только с успешными результатами.",
+"",
+"+100 к счастью",
+"+200 к улыбкам",
+"+999 к удаче",
+"",
+"Спасибо, что ты есть ❤️",
+"",
+"> program executed successfully"
+
+]
+
+let i=0
+let j=0
+let current=""
+let speed=40
+
+function type(){
+
+if(i < text.length){
+
+if(j < text[i].length){
+
+current += text[i][j]
+j++
+
+document.getElementById("terminal").innerHTML =
+current + '<span class="cursor"></span>'
+
+setTimeout(type,speed)
+
+}else{
+
+current += "<br>"
+i++
+j=0
+
+setTimeout(type,300)
+
 }
+
+}else{
+
+document.getElementById("terminal").innerHTML = current
+document.getElementById("hugButton").style.display="block"
+
+}
+
+}
+
+type()
+
+function startLove(){
+
+document.getElementById("music").play()
+
+setInterval(createHeart,200)
+
+}
+
+function createHeart(){
+
+const heart = document.createElement("div")
+heart.className="heart"
+heart.innerHTML="❤️"
+
+heart.style.left=Math.random()*100+"vw"
+heart.style.animationDuration=(3+Math.random()*3)+"s"
+
+document.body.appendChild(heart)
+
+setTimeout(()=>{
+
+heart.remove()
+
+},5000)
+
+}
+
 </script>
 
 </body>
