@@ -59,7 +59,7 @@ button:hover{
 
 .heart{
   position:fixed;
-  font-size:50px; /* крупные сердца для мобильного */
+  font-size:50px;
   top:-50px;
   animation:fall linear forwards;
 }
@@ -105,41 +105,53 @@ button:hover{
 <body>
 
 <div class="card">
-  <h1>С Днём Рождения 🎉</h1>
-  <p id="text1">У меня есть для тебя маленький сюрприз.</p>
+  <h1>С Днём Рождения Красавица 🎉</h1>
+  <p id="text1">У меня есть для тебя маленькое пожелание.</p>
   <button id="btn" onclick="showMessage()">Нажми</button>
   <div id="message" class="hidden"></div>
-  <button id="gameBtn" class="hidden" onclick="startGame()">Поймай сердца ❤️</button>
+  <button id="gameBtn" class="hidden" onclick="startGame()">Поймай поцелуи 💋</button>
 </div>
 
+<!-- Локальная музыка -->
 <audio id="music" loop>
-  <source src="https://pixabay.com/music/happy-childrens-tunes-happy-491187" type="audio/mpeg">
+  <source src="music.mp3" type="audio/mpeg">
 </audio>
 
 <div id="gameArea"></div>
 <div id="score" class="hidden">Очки: 0</div>
 
 <script>
-// Текст поздравления
+// Текст поздравления с расширенными пожеланиями
 const lines = [
   "Поздравляю тебя с днём рождения!",
   "Ты очень особенный и дорогой человек.",
   "Желаю счастья, здоровья и улыбок каждый день.",
+  "Пусть каждый день приносит радость и вдохновение.",
+  "Пусть сбудутся все твои мечты и желания.",
+  "Желаю море смеха, тепла и верных друзей рядом.",
+  "Пусть удача сопровождает тебя во всех начинаниях.",
+  "Не забывай радоваться мелочам и ценить моменты.",
+  "Пусть каждый новый день будет ярче предыдущего.",
   "Спасибо, что ты есть в моей жизни ❤️",
   "This page was made specially for you"
 ];
 
 let i = 0;
 function showNextLine(){
-  if(i<lines.length){
+  if(i < lines.length){
     const p = document.createElement("p");
     p.textContent = lines[i];
     p.style.animation = "fadeIn 1.5s ease";
-    if(i===lines.length-1) p.className="final";
+    if(i === lines.length-1) p.className = "final";
     document.getElementById("message").appendChild(p);
+
+    // Мини-анимация поцелуев для каждого пожелания
+    createMiniKisses();
+
     i++;
     setTimeout(showNextLine, 2000);
-    if(i===3){
+
+    if(i === 3){
       document.getElementById("gameBtn").classList.remove("hidden");
     }
   }
@@ -149,21 +161,36 @@ function showMessage(){
   document.getElementById("message").classList.remove("hidden");
   document.getElementById("music").play();
   document.getElementById("btn").style.display="none";
-  setInterval(createHeart,500);
+  setInterval(createHeart,500); // фоновые сердца
   showNextLine();
 }
 
+// Фоновые сердца до начала игры
 function createHeart(){
   const heart = document.createElement("div");
   heart.className="heart";
   heart.innerHTML="❤️";
-  heart.style.left=Math.random()*100+"vw";
-  heart.style.animationDuration=(4+Math.random()*2)+"s"; // медленнее
+  heart.style.left = Math.random()*100+"vw";
+  heart.style.animationDuration = (4 + Math.random()*2)+"s";
   document.body.appendChild(heart);
   setTimeout(()=> heart.remove(),6000);
 }
 
-// ---- Мобильная мини-игра ----
+// Мини-анимация поцелуев при каждом пожелании
+function createMiniKisses(){
+  for(let j = 0; j < 5; j++){
+    const kiss = document.createElement("div");
+    kiss.className = "heart";
+    kiss.innerHTML = "💋";
+    kiss.style.left = (Math.random() * 80 + 10) + "vw";
+    kiss.style.fontSize = (20 + Math.random()*20) + "px";
+    kiss.style.animationDuration = (3 + Math.random()*2) + "s";
+    document.body.appendChild(kiss);
+    setTimeout(()=> kiss.remove(), 5000);
+  }
+}
+
+// ---- Мобильная мини-игра с падающими поцелуями ----
 let score = 0;
 function startGame(){
   const gameArea = document.getElementById("gameArea");
@@ -180,21 +207,22 @@ function startGame(){
   }
   document.body.addEventListener("touchstart", tapHandler);
 
-  // Сердца падают для красоты
+  // Падающие поцелуи для игры
   const gameInterval = setInterval(()=>{
-    const heart = document.createElement("div");
-    heart.className="heart";
-    heart.style.left=Math.random()*100+"vw";
-    heart.style.animationDuration=(4+Math.random()*2)+"s";
-    gameArea.appendChild(heart);
-    setTimeout(()=> heart.remove(),6000);
+    const kiss = document.createElement("div");
+    kiss.className = "heart";
+    kiss.innerHTML = "💋";
+    kiss.style.left = Math.random()*100+"vw";
+    kiss.style.animationDuration = (4 + Math.random()*2)+"s";
+    gameArea.appendChild(kiss);
+    setTimeout(()=> kiss.remove(),6000);
   },700);
 
   // Игра 15 секунд
   setTimeout(()=>{
     clearInterval(gameInterval);
     document.body.removeEventListener("touchstart", tapHandler);
-    alert("Игра окончена! Ты набрал " + score + " очков 🎉");
+    alert("Когда увидемся буду должен " + score + " поцелуев 💋");
     gameArea.style.pointerEvents="none";
   },15000);
 }
