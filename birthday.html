@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Birthday.exe</title>
+
+<style>
+body{
+    background:#0f172a;
+    color:#22c55e;
+    font-family: monospace;
+    text-align:center;
+    padding-top:100px;
+}
+
+h1{
+    font-size:40px;
+}
+
+button{
+    padding:15px 30px;
+    font-size:18px;
+    background:#22c55e;
+    border:none;
+    color:black;
+    cursor:pointer;
+    border-radius:8px;
+}
+
+#message{
+    margin-top:40px;
+    font-size:22px;
+    display:none;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Запустить программу поздравления?</h1>
+
+<button onclick="runProgram()">RUN</button>
+
+<div id="message">
+<h2>Компиляция поздравления...</h2>
+<p>✔ Загрузка теплых слов...</p>
+<p>✔ Добавление улыбок...</p>
+<p>✔ Генерация хорошего настроения...</p>
+
+<h1>🎉 С Днём Рождения! 🎉</h1>
+
+<p>
+Сегодня система сообщает:  
+Ты — один из самых ценных людей в моей жизни.
+</p>
+
+<p>
+Желаю тебе:  
++100 к счастью  
++50 к удаче  
++999 к улыбкам  
+и бесконечный запас хорошего настроения.
+</p>
+
+<p>
+Спасибо, что ты есть ❤️
+</p>
+
+</div>
+
+<script>
+function runProgram(){
+    document.getElementById("message").style.display="block";
+}
+</script>
+
+</body>
+</html>
