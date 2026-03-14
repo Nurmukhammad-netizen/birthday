@@ -2,178 +2,202 @@
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
-<title>birthday_protocol.exe</title>
-
+<title>С Днём Рождения</title>
 <style>
-
 body{
-background:#020617;
-color:#22c55e;
-font-family:monospace;
-margin:0;
-padding:40px;
-overflow:hidden;
+  margin:0;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-family:Arial, sans-serif;
+  overflow:hidden;
+  background: linear-gradient(135deg,#ff9a9e,#fad0c4);
 }
 
-#terminal{
-max-width:800px;
-margin:auto;
-font-size:20px;
-line-height:1.6;
+.card{
+  background:white;
+  padding:40px;
+  border-radius:20px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.2);
+  text-align:center;
+  max-width:500px;
+  animation:fadeIn 2s ease;
 }
 
-.cursor{
-display:inline-block;
-width:10px;
-background:#22c55e;
-animation:blink 1s infinite;
+h1{
+  color:#ff4d6d;
+  font-size:40px;
+  margin-bottom:20px;
 }
 
-@keyframes blink{
-0%{opacity:1}
-50%{opacity:0}
-100%{opacity:1}
+p{
+  font-size:20px;
+  line-height:1.6;
+  color:#333;
 }
 
-#hugButton{
-display:none;
-margin-top:30px;
-padding:15px 30px;
-font-size:18px;
-background:#22c55e;
-border:none;
-border-radius:8px;
-cursor:pointer;
+button{
+  margin-top:20px;
+  padding:12px 25px;
+  border:none;
+  background:#ff4d6d;
+  color:white;
+  font-size:18px;
+  border-radius:10px;
+  cursor:pointer;
+}
+
+button:hover{
+  transform:scale(1.05);
+}
+
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(30px);}
+  to{opacity:1; transform:translateY(0);}
 }
 
 .heart{
-position:fixed;
-top:-20px;
-font-size:20px;
-animation:fall linear forwards;
+  position:fixed;
+  font-size:50px; /* крупные сердца для мобильного */
+  top:-50px;
+  animation:fall linear forwards;
 }
 
 @keyframes fall{
-to{
-transform:translateY(110vh);
-opacity:0;
-}
+  to{
+    transform:translateY(110vh);
+    opacity:0;
+  }
 }
 
+.hidden{
+  display:none;
+}
+
+.final{
+  margin-top:20px;
+  font-style:italic;
+  color:#ff4d6d;
+  font-size:18px;
+  animation:fadeIn 3s ease;
+}
+
+#gameArea{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100vw;
+  height:100vh;
+  pointer-events:none;
+}
+
+#score{
+  position:fixed;
+  top:10px;
+  right:20px;
+  font-size:24px;
+  font-weight:bold;
+  color:#ff4d6d;
+}
 </style>
 </head>
-
 <body>
 
-<div id="terminal"></div>
-
-<button id="hugButton" onclick="startLove()">Получить объятие</button>
+<div class="card">
+  <h1>С Днём Рождения 🎉</h1>
+  <p id="text1">У меня есть для тебя маленький сюрприз.</p>
+  <button id="btn" onclick="showMessage()">Нажми</button>
+  <div id="message" class="hidden"></div>
+  <button id="gameBtn" class="hidden" onclick="startGame()">Поймай сердца ❤️</button>
+</div>
 
 <audio id="music" loop>
-<source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_6c6c1a1d9c.mp3?filename=sweet-love-110537.mp3" type="audio/mpeg">
+  <source src="C:\Users\nurmu\Downloads\free_audio_library-acoustic-guitar-royalty-free-woodgrain-sky-425476.mp3" type="audio/mpeg">
 </audio>
 
+<div id="gameArea"></div>
+<div id="score" class="hidden">Очки: 0</div>
+
 <script>
+// Текст поздравления
+const lines = [
+  "Поздравляю тебя с днём рождения!",
+  "Ты очень особенный и дорогой человек.",
+  "Желаю счастья, здоровья и улыбок каждый день.",
+  "Спасибо, что ты есть в моей жизни ❤️",
+  "This page was made specially for you"
+];
 
-const text = [
-
-"> booting birthday_system...",
-"> loading happiness.dll",
-"> loading friendship_module...",
-">",
-"> scanning world for the best girl...",
-"> result: FOUND ❤️",
-">",
-"> compiling birthday message...",
-">",
-"🎉 С ДНЁМ РОЖДЕНИЯ! 🎉",
-"",
-"Сегодня система сообщает:",
-"ты — один из самых ценных людей",
-"в моей жизни.",
-"",
-"Пусть твоя жизнь будет как идеальный код:",
-"без багов, без ошибок,",
-"и только с успешными результатами.",
-"",
-"+100 к счастью",
-"+200 к улыбкам",
-"+999 к удаче",
-"",
-"Спасибо, что ты есть ❤️",
-"",
-"> program executed successfully"
-
-]
-
-let i=0
-let j=0
-let current=""
-let speed=40
-
-function type(){
-
-if(i < text.length){
-
-if(j < text[i].length){
-
-current += text[i][j]
-j++
-
-document.getElementById("terminal").innerHTML =
-current + '<span class="cursor"></span>'
-
-setTimeout(type,speed)
-
-}else{
-
-current += "<br>"
-i++
-j=0
-
-setTimeout(type,300)
-
+let i = 0;
+function showNextLine(){
+  if(i<lines.length){
+    const p = document.createElement("p");
+    p.textContent = lines[i];
+    p.style.animation = "fadeIn 1.5s ease";
+    if(i===lines.length-1) p.className="final";
+    document.getElementById("message").appendChild(p);
+    i++;
+    setTimeout(showNextLine, 2000);
+    if(i===3){
+      document.getElementById("gameBtn").classList.remove("hidden");
+    }
+  }
 }
 
-}else{
-
-document.getElementById("terminal").innerHTML = current
-document.getElementById("hugButton").style.display="block"
-
-}
-
-}
-
-type()
-
-function startLove(){
-
-document.getElementById("music").play()
-
-setInterval(createHeart,200)
-
+function showMessage(){
+  document.getElementById("message").classList.remove("hidden");
+  document.getElementById("music").play();
+  document.getElementById("btn").style.display="none";
+  setInterval(createHeart,500);
+  showNextLine();
 }
 
 function createHeart(){
-
-const heart = document.createElement("div")
-heart.className="heart"
-heart.innerHTML="❤️"
-
-heart.style.left=Math.random()*100+"vw"
-heart.style.animationDuration=(3+Math.random()*3)+"s"
-
-document.body.appendChild(heart)
-
-setTimeout(()=>{
-
-heart.remove()
-
-},5000)
-
+  const heart = document.createElement("div");
+  heart.className="heart";
+  heart.innerHTML="❤️";
+  heart.style.left=Math.random()*100+"vw";
+  heart.style.animationDuration=(4+Math.random()*2)+"s"; // медленнее
+  document.body.appendChild(heart);
+  setTimeout(()=> heart.remove(),6000);
 }
 
-</script>
+// ---- Мобильная мини-игра ----
+let score = 0;
+function startGame(){
+  const gameArea = document.getElementById("gameArea");
+  const scoreDisplay = document.getElementById("score");
+  score = 0;
+  scoreDisplay.textContent = "Очки: 0";
+  scoreDisplay.classList.remove("hidden");
+  gameArea.style.pointerEvents="auto";
 
+  // Тап по экрану = очко
+  function tapHandler(){
+    score++;
+    scoreDisplay.textContent = "Очки: " + score;
+  }
+  document.body.addEventListener("touchstart", tapHandler);
+
+  // Сердца падают для красоты
+  const gameInterval = setInterval(()=>{
+    const heart = document.createElement("div");
+    heart.className="heart";
+    heart.style.left=Math.random()*100+"vw";
+    heart.style.animationDuration=(4+Math.random()*2)+"s";
+    gameArea.appendChild(heart);
+    setTimeout(()=> heart.remove(),6000);
+  },700);
+
+  // Игра 15 секунд
+  setTimeout(()=>{
+    clearInterval(gameInterval);
+    document.body.removeEventListener("touchstart", tapHandler);
+    alert("Игра окончена! Ты набрал " + score + " очков 🎉");
+    gameArea.style.pointerEvents="none";
+  },15000);
+}
+</script>
 </body>
 </html>
